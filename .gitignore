@@ -1,0 +1,7 @@
+target
+Cargo.lock
+*.notes
+*.DS_Store
+img
+*.jpg
+*.png
