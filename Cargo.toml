@@ -4,7 +4,8 @@ version = "0.0.1"
 authors = ["Collyn O'Kane <47607823+okaneco@users.noreply.github.com>"]
 exclude = ["res"]
 edition = "2018"
-description = "A utility for artists and designers to explore color palettes and gradients."
+description = "Command-line utility for artists and designers to explore color palettes and gradients."
+homepage = "https://github.com/okaneco/palgrad"
 repository = "https://github.com/okaneco/palgrad"
 readme = "README.md"
 
@@ -13,7 +14,6 @@ categories = ["graphics", "multimedia::images"]
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-# structopt = { version = "0.3", default-features = false }
 clap = { version = "2", default-features = false }
 
 [dependencies.image]
