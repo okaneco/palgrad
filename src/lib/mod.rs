@@ -12,7 +12,6 @@ mod radial;
 
 pub(crate) enum Work {
     LinGradCont,
-    LinGradContOverlay,
     LinGradStep,
     RadGradCont,
     RadGradContOverlay,

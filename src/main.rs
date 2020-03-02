@@ -340,8 +340,6 @@ fn try_main() -> Result<(), Box<dyn Error>> {
     if config.linear {
         if m.occurrences_of("steps") > 0 {
             program_type = Work::LinGradStep;
-        } else if m.occurrences_of("overlay") > 0 {
-            program_type = Work::LinGradContOverlay;
         } else {
             program_type = Work::LinGradCont;
         }
@@ -357,7 +355,6 @@ fn try_main() -> Result<(), Box<dyn Error>> {
 
     match program_type {
         Work::LinGradCont => linear_gradient_continuous(config)?,
-        Work::LinGradContOverlay => {}
         Work::LinGradStep => linear_gradient_stepped(config)?,
         Work::RadGradCont => radial_gradient_continuous(config)?,
         Work::RadGradContOverlay => radial_gradient_with_overlay(config)?,
