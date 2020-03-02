@@ -12,7 +12,7 @@ Gradients are created in `Lch` color space (also known as `HCL`), the cylindrica
 - Radial and linear continuous gradients
 - Radial continuous gradients with overlay
 - Radial and linear stepped gradients
-- Declare colors in `HSV`, `RGB`, and `Lch`
+- Declare colors in `Lch`, `HSV`, and `RGB`
 
 Some ideas for using the output:
 - gamut masking
@@ -20,13 +20,38 @@ Some ideas for using the output:
 - bring into digital painting programs to color pick from as limited palettes and apply more filters
 - website/application color themes
 
+This crate uses [`palette`](https://github.com/Ogeon/palette) to handle the heavy lifting of color conversion.
+
 ## Documentation
 
 *To be updated*
 
 ## Examples
 
-*To be updated*
+### Overlay color on radial gradient
+![Radial gradients and linear gradien](gfx/ex-overlay.png)
+
+```bash
+palgrad -c -o -s 128
+```
+Overlay a 50% grey over the default RGB colors in `-c` with a size of 128x128 pixels. An overlay RGB color can be specified after the `-o` argument.
+
+### Stepped radial gradient
+![Radial gradients and linear gradien](gfx/ex-radial-stepped-radius.png)
+
+```bash
+palgrad --hsv -n 5 -s 128 -r 0.25
+```
+Use the default HSV colors `--hsv`, 5 steps between the colors, size of 128x128, and inner radius factor of `-r 0.25`.
+
+### Stepped linear gradient
+![Radial gradients and linear gradien](gfx/ex-step-linear.png)
+
+```bash
+palgrad -l -d -n 8 --ss 30x20
+```
+Make a linear gradient `-l` with the default RGB decimal colors `-d`, 8 steps between the two colors, and the swatch sizes are 30x20 pixels each. To make a continuous gradient, omit the steps argument `-n`.
+
 
 ## License
 

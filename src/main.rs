@@ -99,7 +99,7 @@ fn try_main() -> Result<(), Box<dyn Error>> {
                 .short("r")
                 .long("radius")
                 .alias("ir")
-                .help("Inner radius factor between 0.0 and 1.0")
+                .help("Inner radius factor between 0.0 and 0.5")
                 .takes_value(true)
                 .required(false)
                 .default_value("0.05"),
@@ -310,11 +310,17 @@ fn try_main() -> Result<(), Box<dyn Error>> {
         );
     }
 
+    let mut radius_inner = m.value_of("radius").unwrap().parse::<f32>()?;
+    if radius_inner >= 0.5 {
+        radius_inner = 0.49;
+    } else if radius_inner < 0.0 {
+        radius_inner = 0.0;
+    }
+
     let angle_offset = core::f32::consts::FRAC_PI_2;
     let overlay_factor = 0.9;
     let size = m.value_of("size").unwrap().parse::<u32>()?;
     let steps = m.value_of("steps").unwrap().parse::<u32>()?;
-    let radius_inner = m.value_of("radius").unwrap().parse::<f32>()?;
 
     let config = Config {
         angle_offset,
