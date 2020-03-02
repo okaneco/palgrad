@@ -1,7 +1,9 @@
 # palgrad
 [![Build Status](https://travis-ci.com/okaneco/palgrad.svg?branch=master)](https://travis-ci.com/okaneco/palgrad)
+[![Crates.io](https://img.shields.io/crates/v/palgrad.svg)](https://crates.io/crates/palgrad)
 
-![Radial gradients and linear gradien](gfx/hero.png)
+
+![Radial gradients and linear gradient](gfx/hero.png)
 
 `palgrad` is a command line utility that creates color gradients and palettes from user input colors.
 
@@ -21,10 +23,6 @@ Some ideas for using the output:
 - website/application color themes
 
 This crate uses [`palette`](https://github.com/Ogeon/palette) to handle the heavy lifting of color conversion.
-
-## Documentation
-
-*To be updated*
 
 ## Examples
 
