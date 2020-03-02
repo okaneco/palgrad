@@ -1,11 +1,11 @@
-use core::str::FromStr;
+// use core::str::FromStr;
 use std::error::Error;
 use std::path::PathBuf;
 use std::process;
 
 use clap::{crate_authors, crate_version, App, Arg};
-use palette::encoding;
-use palette::rgb::Rgb;
+// use palette::encoding;
+// use palette::rgb::Rgb;
 use palette::{Hsv, Lch, LinSrgba, Srgb};
 
 mod lib;
@@ -49,19 +49,19 @@ fn try_main() -> Result<(), Box<dyn Error>> {
                 .require_delimiter(true)
                 .value_delimiter(";"),
         )
-        .arg(
-            Arg::with_name("hex colors")
-                .min_values(2)
-                .max_values(32)
-                .empty_values(false)
-                .short("x")
-                .long("hex")
-                .help("Specify the colors in hex format `#RRGGBB` delimited by `;`")
-                .value_name("HEX_COLORS")
-                .default_value("#e85348;#468f46;#22106e")
-                .require_delimiter(true)
-                .value_delimiter(";"),
-        )
+        // .arg(
+        //     Arg::with_name("hex colors")
+        //         .min_values(2)
+        //         .max_values(32)
+        //         .empty_values(false)
+        //         .short("x")
+        //         .long("hex")
+        //         .help("Specify the colors in hex format `#RRGGBB` delimited by `;`")
+        //         .value_name("HEX_COLORS")
+        //         .default_value("#e85348;#468f46;#22106e")
+        //         .require_delimiter(true)
+        //         .value_delimiter(";"),
+        // )
         .arg(
             Arg::with_name("hsv colors")
                 .min_values(2)
@@ -196,14 +196,14 @@ fn try_main() -> Result<(), Box<dyn Error>> {
         }
     }
 
-    if m.occurrences_of("hex colors") > 0 {
-        if let Some(colors) = m.values_of("hex colors") {
-            for color in colors {
-                let rgb = Rgb::<encoding::Srgb, u8>::from_str(color).unwrap();
-                grad_vec.push(Lch::from(rgb.into_format::<f32>().into_linear()));
-            }
-        }
-    }
+    // if m.occurrences_of("hex colors") > 0 {
+    //     if let Some(colors) = m.values_of("hex colors") {
+    //         for color in colors {
+    //             let rgb = Rgb::<encoding::Srgb, u8>::from_str(color).unwrap();
+    //             grad_vec.push(Lch::from(rgb.into_format::<f32>().into_linear()));
+    //         }
+    //     }
+    // }
 
     if m.occurrences_of("hsv colors") > 0 {
         if let Some(colors) = m.values_of("hsv colors") {

@@ -22,6 +22,7 @@ default-features = false
 features = ["jpeg", "png"]
 
 [dependencies.palette]
+version = "0.5"
 git = "https://github.com/Ogeon/palette/"
 default-features = false
 features = ["std"]
