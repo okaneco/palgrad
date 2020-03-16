@@ -109,7 +109,7 @@ fn try_main() -> Result<(), Box<dyn Error>> {
                 .short("n")
                 .long("steps")
                 .alias("st")
-                .help("Number of color steps between each color")
+                .help("Number of color steps in the gradient")
                 .takes_value(true)
                 .required(false)
                 .default_value("11"),
@@ -150,6 +150,17 @@ fn try_main() -> Result<(), Box<dyn Error>> {
                 .takes_value(true)
                 .default_value("40x40")
                 .value_delimiter("x"),
+        )
+        .arg(
+            Arg::with_name("print")
+            .short("p")
+            .long("print")
+            .help("Print colors produced by stepped gradients")
+        )
+        .arg(
+            Arg::with_name("no file")
+            .long("no-file")
+            .help("Don't output file, for use with printing stepped gradient colors")
         )
         .get_matches();
 
@@ -320,7 +331,20 @@ fn try_main() -> Result<(), Box<dyn Error>> {
     let angle_offset = core::f32::consts::FRAC_PI_2;
     let overlay_factor = 0.9;
     let size = m.value_of("size").unwrap().parse::<u32>()?;
-    let steps = m.value_of("steps").unwrap().parse::<u32>()?;
+    let steps = m.value_of("steps").unwrap().parse::<usize>()?;
+
+    let print_grad;
+    if m.is_present("print") {
+        print_grad = true;
+    } else {
+        print_grad = false;
+    }
+    let no_file;
+    if m.is_present("no file") {
+        no_file = true;
+    } else {
+        no_file = false;
+    }
 
     let config = Config {
         angle_offset,
@@ -330,6 +354,8 @@ fn try_main() -> Result<(), Box<dyn Error>> {
         output_file,
         overlay,
         overlay_factor,
+        no_file,
+        print_grad,
         size,
         steps,
         swatch_size,

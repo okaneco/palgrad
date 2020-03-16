@@ -1,6 +1,6 @@
 use palette::{Blend, Gradient, LinSrgb, LinSrgba, Pixel, Srgb, Srgba};
 
-use crate::{generate_filename, Config};
+use crate::{generate_filename, print_colors, Config};
 
 fn midpoint_xy_dist(size_x: u32, size_y: u32, x2: u32, y2: u32) -> [f32; 2] {
     let mut result: [f32; 2] = [0.0, 0.0];
@@ -45,33 +45,26 @@ pub fn radial_gradient_continuous(config: Config) -> std::io::Result<()> {
         *pixel = image::Rgba(pix);
     }
     let title = generate_filename();
-    imgbuf.save(title).expect("Could not save file");
+    imgbuf.save(title.unwrap()).expect("Could not save file");
 
     Ok(())
 }
 
 pub fn radial_gradient_stepped(config: Config) -> std::io::Result<()> {
-    let num_steps;
-    let vec_len = config.grad_vec.len();
-    if vec_len == 2 {
-        if config.steps > 1 {
-            num_steps = vec_len + config.steps as usize;
-        } else if config.steps == 1 {
-            num_steps = (vec_len * config.steps as usize) + 1;
-        } else {
-            num_steps = vec_len;
-        }
-    } else {
-        num_steps = (vec_len - 1) * (config.steps as usize) + 1;
-    }
-
     let grad1 = Gradient::new(config.grad_vec);
-    let grad2 = grad1.take(num_steps);
+    let grad2 = grad1.take(config.steps);
 
-    let mut grad_vec = Vec::with_capacity(num_steps);
+    let mut grad_vec = Vec::with_capacity(config.steps);
     for color in grad2 {
         let pix = Srgb::from_linear(LinSrgb::from(color));
         grad_vec.push(pix);
+    }
+
+    if config.print_grad {
+        print_colors(&grad_vec)?;
+    }
+    if config.no_file {
+        return Ok(());
     }
 
     let img_x = config.size;
@@ -109,7 +102,7 @@ pub fn radial_gradient_stepped(config: Config) -> std::io::Result<()> {
         *pixel = image::Rgba(pix);
     }
     let title = generate_filename();
-    imgbuf.save(title).expect("Could not save file");
+    imgbuf.save(title.unwrap()).expect("Could not save file");
 
     Ok(())
 }
@@ -153,7 +146,7 @@ pub fn radial_gradient_with_overlay(config: Config) -> std::io::Result<()> {
     }
 
     let title = generate_filename();
-    imgbuf.save(title).expect("Could not save file");
+    imgbuf.save(title.unwrap()).expect("Could not save file");
 
     Ok(())
 }
