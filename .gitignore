@@ -1,5 +1,5 @@
 target
-**/*.notes
+*.notes
 **/.DS_Store
 img
 res

@@ -1,7 +1,12 @@
+use std::error::Error;
+use std::path::PathBuf;
+
 use palette::{Blend, Gradient, LinSrgb, LinSrgba, Pixel, Srgb, Srgba};
 
-use crate::{generate_filename, print_colors, Config};
+use crate::{generate_filename, print_colors, save_image_alpha, Config};
 
+/// Finds the midpoint between a point in the image and the center of the image
+/// with width `size_x` and height `size_y`.
 fn midpoint_xy_dist(size_x: u32, size_y: u32, x2: u32, y2: u32) -> [f32; 2] {
     let mut result: [f32; 2] = [0.0, 0.0];
     result[0] = (x2 as f32) - ((size_x as f32 / 2.0) - 1.0);
@@ -9,7 +14,9 @@ fn midpoint_xy_dist(size_x: u32, size_y: u32, x2: u32, y2: u32) -> [f32; 2] {
     result
 }
 
-pub fn radial_gradient_continuous(config: Config) -> std::io::Result<()> {
+/// Creates an image of a circular, continuous gradient. The steps between each
+/// color will be indiscernible given a large enough image size.
+pub fn radial_gradient_continuous(config: Config) -> Result<(), Box<dyn Error>> {
     let grad = Gradient::new(config.grad_vec);
     let img_x = config.size;
     let img_y = config.size;
@@ -44,24 +51,30 @@ pub fn radial_gradient_continuous(config: Config) -> std::io::Result<()> {
         }
         *pixel = image::Rgba(pix);
     }
-    let title = generate_filename();
-    imgbuf.save(title.unwrap()).expect("Could not save file");
 
-    Ok(())
+    let mut title = PathBuf::from(generate_filename()?);
+    title.set_extension("png");
+
+    save_image_alpha(&imgbuf, &title)
 }
 
-pub fn radial_gradient_stepped(config: Config) -> std::io::Result<()> {
-    let grad1 = Gradient::new(config.grad_vec);
-    let grad2 = grad1.take(config.steps);
+/// Creates an image of a circular, stepped gradient. The steps between each
+/// color are discrete and noticeable compared to a continuous gradient.
+pub fn radial_gradient_stepped(config: Config) -> Result<(), Box<dyn Error>> {
+    // We need to add +1 because the starting color is appended to the end
+    // for radial gradients. Otherwise, we're left with `steps - 1` colors.
+    let steps = config.steps + 1;
 
-    let mut grad_vec = Vec::with_capacity(config.steps);
-    for color in grad2 {
-        let pix = Srgb::from_linear(LinSrgb::from(color));
-        grad_vec.push(pix);
-    }
+    let grad1 = Gradient::new(config.grad_vec);
+    let grad2 = grad1.take(steps);
+
+    let mut grad_vec = Vec::with_capacity(steps);
+    grad2
+        .into_iter()
+        .for_each(|c| grad_vec.push(Srgb::from_linear(LinSrgb::from(c))));
 
     if config.print_grad {
-        print_colors(&grad_vec)?;
+        print_colors(&grad_vec);
     }
     if config.no_file {
         return Ok(());
@@ -101,13 +114,17 @@ pub fn radial_gradient_stepped(config: Config) -> std::io::Result<()> {
         }
         *pixel = image::Rgba(pix);
     }
-    let title = generate_filename();
-    imgbuf.save(title.unwrap()).expect("Could not save file");
 
-    Ok(())
+    let mut title = PathBuf::from(generate_filename()?);
+    title.set_extension("png");
+
+    save_image_alpha(&imgbuf, &title)
 }
 
-pub fn radial_gradient_with_overlay(config: Config) -> std::io::Result<()> {
+/// Creates an image of a circular, continuous gradient with a color overlay.
+/// The color is overlayed using the blending mode `atop`. A blending factor
+/// can be used to adjust the radius of the overlay blending.
+pub fn radial_gradient_with_overlay(config: Config) -> Result<(), Box<dyn Error>> {
     let grad = Gradient::new(config.grad_vec);
     let angle_offset = config.angle_offset;
     let factor = config.overlay_factor;
@@ -145,8 +162,8 @@ pub fn radial_gradient_with_overlay(config: Config) -> std::io::Result<()> {
         *pixel = image::Rgba(pix);
     }
 
-    let title = generate_filename();
-    imgbuf.save(title.unwrap()).expect("Could not save file");
+    let mut title = PathBuf::from(generate_filename()?);
+    title.set_extension("png");
 
-    Ok(())
+    save_image_alpha(&imgbuf, &title)
 }

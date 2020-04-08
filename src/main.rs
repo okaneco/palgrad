@@ -1,11 +1,8 @@
-// use core::str::FromStr;
 use std::error::Error;
 use std::path::PathBuf;
 use std::process;
 
-use clap::{crate_authors, crate_version, App, Arg};
-// use palette::encoding;
-// use palette::rgb::Rgb;
+use clap::{crate_version, App, Arg};
 use palette::{Hsv, Lch, LinSrgba, Srgb};
 
 mod lib;
@@ -21,7 +18,6 @@ fn main() {
 fn try_main() -> Result<(), Box<dyn Error>> {
     let m = App::new("palgrad")
         .version(crate_version!())
-        .author(crate_authors!())
         .about("Create gradients and palettes from the command-line")
         .arg(
             Arg::with_name("colors")
